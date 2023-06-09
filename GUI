@@ -1,0 +1,33 @@
+!pip3 install pygame #install pygame 
+
+
+!pip3 install rich
+
+import os 
+import time 
+from tkinter import * 
+from pygame import mixer
+
+
+
+
+
+root = Tk()
+
+root.title("slick music player") #title of the application 
+
+
+root.geometry("485x700+290+10") #size of the window
+
+
+lower_frame = Frame(root, bg= "white", width = 485, height = 180 ) 
+
+lower_frame.place(x=0, y=400)
+
+image_icon = PhotoImage(file="Music player logo.png") #applicaition image 
+root.iconphoto(False, image_icon)
+
+Menu = PhotoImage()
+
+
+root.mainloop() 
