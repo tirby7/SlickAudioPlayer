@@ -10,10 +10,10 @@ lower_frame = Frame(root, bg= "white", width = 485, height = 180 )
 
 lower_frame.place(x=0, y=400)
 
-#image_icon = PhotoImage(file= "Music player logo.png")
+#image_icon = PhotoImage(file= "Music player logo.png") #Application Icon
 #root.iconphoto(False, image_icon)
 
-#Menu = PhotoImage (file = "White background.jpg")
+#Menu = PhotoImage (file = "White background.jpg") #Menu background 
 #Label(root, image = Menu).place(x=0, y=580, width = 485, height = 580)
 
 Music_Frame = Frame(root, bd = 2 , relief = RIDGE)
