@@ -1,9 +1,0 @@
-!pip3 install pygame #install pygame 
-
-
-!pip3 install rich
-
-import os 
-import time 
-from tkinter import * 
-from pygame import mixer
