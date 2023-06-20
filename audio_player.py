@@ -5,16 +5,35 @@
 #pip3 install audioplayer # maybe this is better than pygame?
 #pip3 install rich
 
-import os 
-import time 
+import time
 from tkinter import * 
-from tkinter.filedialog import askdirectory  # TK module for file dialog widgets
+from tkinter import filedialog
+from tkinter.filedialog import askdirectory
 from pygame import mixer
-mixer.init(44100, -16,2,2048)
+import os 
 
 
-# please put all your widgets and callbacks inside a class, this will make things
-# easier later!
+
+
+#Gif visualizer ( runs into problem saying expcted interger got index )
+#FrameCnt = 30 
+#frames = [PhotoImage(file = "Image MUSIC.gif", format = 'gif - index %i' %(i)) for i in range (FrameCnt)]
+
+
+#def update (ind):
+
+ #   frame = frames [ind]
+  #  ind += 1 
+   # if ind == FrameCnt: 
+    #    ind = 0
+    #label.configure(image = frame)
+    #root.after(40, update, ind)
+#label = Label(root)
+#label.place(x=0, y=0)
+#root.after(0, update, 0)
+
+
+
 class AudioPlayerApp(Frame):
 
     def __init__(self, root):
@@ -70,6 +89,8 @@ class AudioPlayerApp(Frame):
         print(self.music_folder + "/" + music_Name)
         mixer.music.load(self.music_folder + "/" + music_Name)
         mixer.music.play()
+    Menu = PhotoImage (file = "White-Background-PNG-Pic.png")
+    #Label(root, image = Menu).place(x=0, y=580, width = 485, height = 100)
 
 # run app instance
 root = Tk()
@@ -77,43 +98,35 @@ root.title("slick music player")
 root.geometry("485x700+290+10")
 myapp = AudioPlayerApp(root) # create an App object inside the master window
 root.mainloop()
-
-
-'''
-
-lower_frame = Frame(root, bg= "white", width = 485, height = 180 )
-lower_frame.place(x=0, y=400)
-
-#image_icon = PhotoImage(file= "Music player logo.png") #Application Icon
-#root.iconphoto(False, image_icon)
-
-#Menu = PhotoImage (file = "White background.jpg") #Menu background 
-#Label(root, image = Menu).place(x=0, y=580, width = 485, height = 580)
-
-Music_Frame = Frame(root, bd = 2 , relief = RIDGE)
-Music_Frame.place(x=0, y=585, width = 485, height = 100)
-
-
-def AddMusic(): 
-    path = ("directory code")
-    if path:
-        os.chdir(path)
-        songs = os.listdir(path)
-
-        for song in songs: 
-            if song.endswith(".mp3", ".AAC"):
-                self.playlist.insert(END, song)
+image_icon = PhotoImage(file= "Music player logo.png")
+root.iconphoto(False, image_icon)
 
 
 
-root.mainloop() 
+Frame_Music = Frame(root, bd = 2, relief = RIDGE)
+Frame_Music.place (x=0, y=585, width = 485, height = 100 )
+
+#play button ( cant get it to appear)
+#ButtonPlay = PhotoImage(file = "play.png")
+#Button(root, image = ButtonPlay, bg = "#000000", bd =0, height = 60, width = 60,command = PlayMusic).place(x=215, y= 487)
+
+#Stop Button (square appears)
+ButtonStop = PhotoImage(file= "Stop Button.png")
+Button(root, image = ButtonStop, bg = "#000000", bd = 0, height =60, width =60, command = mixer.music.stop ).place(x=130, y=487)
+
+#Volume button appears but is to big ( need resizing)
+VolumeButton = PhotoImage(file = "volume-icon-10.png")
+panel = Label(root, image = VolumeButton).place(x =20, y=487)
 
 
+#Browse Button 
+#Button(root, text = " Browse Music", width = 59, height = 1, font = ("calibri", 12, "bold"), fg = "Black", bg = "#FFFFFF", command = AddMusic).place(x=0, y=550)
 
-def PlayMusic(): 
-    Music_Name = self.playlist.get(ACTIVE)
-    print(Music_Name(ACTIVE))
-    mixer.music.load(self.playlist.get(ACTIVE))
-    mixer.music.play()
+#scroll bar 
+Scroll = Scrollbar (Frame_Music)
+Playlist = Listbox(Frame_Music, width = 100, font = ("Times new roman", 10),bg ="#333333", fg= "grey", selectbackground = "lightblue", cursor = "hand2", bd = 0, yscrollcommand = Scroll.set) 
 
-'''
+Scroll.config(command = Playlist.yview)
+Scroll.pack(side = RIGHT, fill = Y)
+Playlist.pack(side = RIGHT, fill = BOTH)
+
