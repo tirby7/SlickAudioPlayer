@@ -50,20 +50,20 @@ def Pause_Unpause():
     global count
     music_name = musics.get(ACTIVE)
     if len(music_name) > 40: 
-        song_name.config(text = music_name[0:40]+".........")
+        song_name.config(text = music_name[0:40] + ".........")
     else: 
         song_name.config(text = music_name)
     
     if(Pause_button['textvariable']=="3"):
         Pause()
         count = 0
-        animation_frame["textbariable"]= '0'
+        animation_frame["textbariable"] = '0'
         if animation_frame["text"] == "0":
             not_listening_animation(count)
             animation_frame["text"] = "1"
         Pause_button.config(textvariable="4")
     
-    elif(Pause_button['textbariable']=="4"):
+    elif (Pause_button['textbariable']=="4"):
         animation_frame["textvariable"] = '1'
         try:
             paused
@@ -81,12 +81,13 @@ def Pause_Unpause():
 def Play_music():
     global count 
     music_name = musics.get(ACTIVE)
-    if len(music_name)> 40:
+    if len(music_name) > 40:
         song_name.config(text = music_name [0:40] + ".........")
     else: 
         song_name.config(text = music_name)
     playing_time()
     mixer.music.load(music_name)
+    mixer.music.play()
     count = 0 
     animation_frame["textvariable"] = '1'
     if animation_frame["text"] =="1":
@@ -128,7 +129,7 @@ def Prev_song():
     mixer.music.load(next_song)
     mixer.music.play()
 
-    musics.seletion_clear(current_song, END)
+    musics.selection_clear(current_song, END)
     musics.activate(select)
     musics.selection_set(select, last=None)
     count = 0
