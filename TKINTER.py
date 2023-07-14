@@ -1,220 +1,307 @@
-from tkinter import * 
-import PIL 
+from tkinter import *
+from tkinter import filedialog
+import os
+from mutagen.mp3 import MP3
+from pygame import mixer 
+import time 
+from PIL import Image 
 import customtkinter
-from luckycharms import luckycharms 
+
 
 
 #Dark and Light Mode
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
+#This will create the window for the application 
+window=Tk()
+window.title("Slick Music Player")
+window.maxsize(800,600)
+window.minsize(800,600)
+window.configure()
 
 
+vol = IntVar()
+extention = '.mp3'
+gif1 = 'Animation/gifh1.gif'
+gif2 = 'Animation/music37.gif'
+count = 0 
+change_anim = 0 
 
-class SlickMusicPlayer(customtkinter.CTk):
-    def __init__(self): 
-        super().__init__()
-        self.title(" Slick Music Player")
-        self.geometry('1000x500')
-        self.__titre_text = StringVar()
-        self.__play_image = PhotoImage(file="img/play.png")
-        self.__pause_image = PhotoImage(file="img/stop_button.png")
-        self.__next_image = PhotoImage(file="img/forward_button.png")
-        self.__back_image = PhotoImage(file="img/backward_button.png")
-        self.__album_image = customtkinter.CTkImage(PIL.Image.open
-                                                    ("img/Music_player_logo.png"),
-                                                size =(150,150) )    
-        self.__play_status: bool = False
-        self.__theme: str= "white"
-        self.__activate_now: int= 0
-        self.__scrolloff:int = 8 
-
-        self.__position = 0 
-        
-     
-       
-
-        self.__container = customtkinter.CTkFrame(self)
-
-        self.__left_frame = customtkinter.CTkFrame(self.__container)
-        
-        self.__search_frame= customtkinter.CTkFrame(self.__left_frame)
-        self.__search_entry = customtkinter.CTkEntry(
-            self.__search_frame, placeholder_text= "search"
-        )
-        self.__search_entry.pack(fill="x", side="left", expand=1)
-        self.__search_frame.pack(fill="x", pady=5)
-        self.__scrollbar = customtkinter.CTkScrollbar(self.__left_frame)
-        self.__scrollbar.pack(side="left", fill="y")
-        self.__music_listbox = Listbox(
-            self.__left_frame,
-            bg="white",
-            fg="gray",
-            height=80,
-            width=60,
-            selectbackground="black",
-            selectforeground="white",
-            yscrollcommand=self.__scrollbar.set,
-        )
-        self.__music_listbox.pack(fill="x")
-        self.__scrollbar.configure(command=self.__music_listbox.yview)
-        self.__music_listbox.pack(fill="x")
-        self.__scrollbar.configure(command=self.__music_listbox.yview)
-
-        
-        
+mixer.init() 
 
 
-        self.__left_frame.pack(pady=20, side="left", fill="y", padx=5)
-
-        self.__right_frame = customtkinter.CTkFrame(self.__container)
-        self.__titre_text = StringVar()
-        self.__titre = customtkinter.CTkLabel(
-            self.__right_frame, textvariable=self.__titre_text
-        ).pack(pady=50)
-        self.__image_music = customtkinter.CTkLabel(
-            self.__right_frame, text="", image=self.__album_image
-        )
-        self.__image_music.pack()
-
-        self.__right_frame_bottom=customtkinter.CTkLabel(self.__right_frame)
-
-        self.__frame_center_button = customtkinter.CTkFrame(self.__right_frame_bottom)
-        Button(
-            self.__frame_center_button,
-            text=None,
-            relief="groove",
-            borderwidth=0,
-            command=self.back,
-            image=self.__back_image, 
-        ).pack(side="left")
-        self.__play_button = Button(
-            self.__frame_center_button,
-            text="",
-            relief="groove",
-            command=self.play, 
-            image= self.__play_image, 
-        )
-        self.__play_button.pack(padx=10, side="left")
-        Button(
-            self.__frame_center_button,
-            text="",
-            relief="groove",
-            borderwidth=0,
-            command=self.next,
-            image=self.__next_image,
-        ).pack(side="left")
+#this function is for browsing music folders 
+def open(): 
+    global path 
+    global song 
+    path = filedialog.askdirectory()
+    if path: 
+        os.chdir(path)
+        songs = os.listdir(path)
+        for song in songs: 
+            if song.endswith(extention): 
+                musics.insert(END, song)
 
 
-        self.__right_frame_bottom.pack(side="bottom", pady=10)
-
-        self.scale = customtkinter.CTkSlider(
-            self.__right_frame, command= lambda x: (self.change_position(x))
-        )
-        self.scale.pack(side="bottom", fill="x", ipadx=150, pady=10)
-
-        self.__right_frame.pack(side="right", fill="y", expand=1, padx=5)
-
-        self.__container.pack(fill="y", anchor="sw")
-
-        self.__music_listbox.bind("<Double-Button-1>", lambda x: self.select_item_in_listbox(x))
-        self.__search_entry.bind("<KeyRelease>", self.search)
-
-        self.play_time()
-
-    def music_now(self, index):
-            key = self.__music_listbox.get(index)
-
-    def update_title_and_image(self,index):
-            titre, _, artist, image = luckycharms.get_tags(self.music_now(index))
+#This function is for pausing and unpausing music 
+def Pause_Unpause(): 
+    global music_name 
+    global count
+    music_name = musics.get(ACTIVE)
+    if len(music_name) > 40: 
+        song_name.config(text = music_name[0:40]+".........")
+    else: 
+        song_name.config(text = music_name)
     
-    def update_title_and_image(self, index) -> None:
-        titre, _, artist, image = luckycharms.get_tags(self.music_now(index))
-
-        if image is not None:
-            with open(".tmp.jpg", "wb") as file:
-                file.write(image)
-            image = customtkinter.CTkImage(PIL.Image.open(".tmp.jpg"), size=(250, 230))
+    if(Pause_button['textvariable']=="3"):
+        Pause()
+        count = 0
+        animation_frame["textbariable"]= '0'
+        if animation_frame["text"] == "0":
+            not_listening_animation(count)
+            animation_frame["text"] = "1"
+        Pause_button.config(textvariable="4")
+    
+    elif(Pause_button['textbariable']=="4"):
+        animation_frame["textvariable"] = '1'
+        try:
+            paused
+        except NameError:
+            pass
         else:
-            image = self.__album_image
+            mixer.music.unpause()
+            count = 0 
+            if animation_frame["text"] == "1":
+                listening_animation(count)
+                animation_frame["text"] = "0"
+        Pause_button.config(textvariable = "3")
 
-        self.__image_music.configure(image=image)
-        self.__titre_text.set(f"{titre} {artist}")
-    def change_position(self, position: float):
-        luckycharms.set_position(position)
-        self.__position = position
+#this funciton is for playing the music 
+def Play_music():
+    global count 
+    music_name = musics.get(ACTIVE)
+    if len(music_name)> 40:
+        song_name.config(text = music_name [0:40] + ".........")
+    else: 
+        song_name.config(text = music_name)
+    playing_time()
+    mixer.music.load(music_name)
+    count = 0 
+    animation_frame["textvariable"] = '1'
+    if animation_frame["text"] =="1":
+        listening_animation(count)
+        animation_frame["text"]= "0"
 
-    def play_time(self):
-        if self.__play_status:
-            self.__position += 1
-            _, time_left = luckycharms.get_position()
-            self.scale.set(self.__position)
-            if time_left == "59:59":
-                self.next()
-        self.after(1000, self.play_time)
+#this functiong will be use to play the next song
+def Next_song(): 
+    current_song = musics.curselection()
+    select = current_song [0] + 1 
+    next_song = musics.get(select)
+    if len(next_song) > 40: 
+        song_name.config(text=next_song[0:40] + ".........")
+    else:
+        song_name.config(text = next_song)
+    
+    mixer.music.load(next_song)
+    mixer.music.play(loops=0)
 
+    musics.selection_clear(current_song, END)
+    musics.activate(select)
+    musics.selection_set(select, last =NONE)
+    count = 0
+    animation_frame["textvariable"] = '1'
+    if animation_frame ["text"] == "1":
+        listening_animation(count)
+        animation_frame["text"] = "0"
 
-    def play(self, index):
-        self.__play_status = True
-        total_len_music = len(self.__music_listbox.get(0, "end"))
-        if index == total_len_music:
-            index = 0
-        song = self.music_now(index)
-        self.scale._to = luckycharms.play(song)
-        self.scale.set(0)
-        self.__position = 0
-        self.__play_button.config(image=self.__pause_image, command=self.pause)
-        self.__music_listbox.selection_clear(0, "end")
-        self.__music_listbox.activate(index)
-        self.__music_listbox.selection_set(index, last=None)
-        self.__activate_now: int = self.__music_listbox.curselection()[0]
-        self.__music_listbox.yview(
-            "moveto", (self.__activate_now - self.__scrolloff) / total_len_music,
-        )  
-        self.update_title_and_image(self.__activate_now)
+# This function will be used to go to the previous song
+def Prev_song(): 
+    current_song = musics.curselection()
+    select = current_song[0] - 1 
+    next_song = musics.get(select)
+    if len (next_song) > 40: 
+        song_name.config(text = next_song [0:40] + ".........")
+    else: 
+        song_name.config(text = next_song)
+    
+    mixer.music.load(next_song)
+    mixer.music.play()
 
-    def pause(self):
-        if self.__play_status:
-            self.__play_button.config(image=self.__play_image)
-        else:
-            self.__play_button.config(image=self.__pause_image)
-        self.__play_status: bool = luckycharms.pause()
+    musics.seletion_clear(current_song, END)
+    musics.activate(select)
+    musics.selection_set(select, last=None)
+    count = 0
+    animation_frame["textvariable"] = '1'
+    if animation_frame["text"] == "1": 
+        listening_animation(count)
+        animation_frame["text"] = "0"
 
-    def next(self) -> None:
-        self.__activate_now += 1
-        self.play(self.__activate_now)
+#this function will be used to pause the music
+def Pause(): 
+    global paused 
+    global change_anim
+    change_anim = 0
+    paused = TRUE 
+    mixer.music.pause() 
 
-    def back(self): 
-        self.__activate_now -= 1
-        self.play(self.__activate_now)
+#this fucntion will control the volume of the music 
+def volume(vol):
+    Volume = int(vol)/100
+    if Volume >= 0.80:
+        slider.config(fg = 'blue')
+    else: slider.config(fg = 'black')
 
-    def select_item_in_listbox(self) -> None:
-        self.play()
+    if Volume == 0: 
+        Audio_icon.config(image= mute)
+    else: Audio_icon.config(image= audio)
+    mixer.music.set_volume(Volume)
 
-    def update_music_listbox(self, data):
-        self.__music_listbox.delete(0, "end")
-        for result in data:
-            self.__music_listbox.insert("end", result)
+#this will show the position of the song ( where the song is playing)
+def playing_time(): 
+    current_position = mixer.music.get_pos()/1000
+    
+    converted_time = time.strftime('%M:%S', time.gmtime(current_position))
+    time_label_1.config(text = converted_time)
 
-    def search(self):
-        search_output = self.__search_entry.get()
-        search_result = [
-            title
-            for title in self.__all_WAVE_title
-            if search_output.lower() in title.lower()
-        ]
-        self.update_music_listbox(search_result)
+    cur_song = musics.get(ACTIVE)
+    a = MP3(cur_song)
+    song_length = a.info.length
+    song_len = int(song_length)
+    song_bar.config(to = song_len)
 
+    converted__song_length = time.strftime('%M:%S', time.gmtime(song_length))
+    time_label_2.config(text =converted__song_length)
 
+    if int(current_position) == song_len:
+        Next_song()
+    song_bar.set(current_position)
 
+    time_label_1.after(1000, playing_time)
 
+motion1 = Image.open(gif1)
+motion2 = Image.open(gif2)
 
+listening_frames = motion1.n_frames
+not_listening_frames = motion2.n_frames
 
+frame_list1 = [PhotoImage(file = gif1, format=f'gif -index {i}') for i in range(listening_frames)]
+frame_list2 = [PhotoImage(file = gif2, format=f'gif -index {i}') for i in range(not_listening_frames)]
 
+#this function will play the gif when music is playing 
+def listening_animation(count):
+    frame_count = frame_list1[count]
+    animation_frame.configure(image = frame_count)
+    count +=1
+    if count == listening_frames:
+        count = 0 
+    if animation_frame["textvariable"] == '1': 
+        window.after(30, lambda: listening_animation)
 
-app = SlickMusicPlayer() 
-app.mainloop() 
+#this function will show the animation when musi cis not playing
 
-
-
+def not_listening_animation(count):
+    frame_count = frame_list2[count]
+    animation_frame.configure(image = frame_count)
+    count += 1
+    if count == not_listening_frames: 
+        count = 0 
+    if animation_frame["textvariable"] == '0': 
         
+        window.after(35, lambda: not_listening_animation(count))
+
+#file browsing 
+open_files = Button(window, width = 100, height = 1, text= " Choose Music Folder",  bg= "#0091EA", fg='white', font=("arial", 10, 'bold'), command=open)
+open_files.pack(padx =10, pady=3)
+
+#Playlist 
+musics = Listbox(window, width=800, height=15 , fg= 'white', bg='#424242', yscrollcommand=1, borderwidth=1, font=("arial", 9), selectmode=SINGLE)
+musics.pack(padx=10)
+
+#this frame will render animations 
+
+animation_frame = Label(window, width=800, text = "1", height=220, bg= '#323232',  highlightthickness=0, textvariable="0")
+animation_frame.pack(padx = 10, pady=5)
+
+not_listening_animation(count)
+
+# music slidebar 
+song_bar = Scale(window, 
+   from_=0,
+   to= 100,
+   width=5,
+   cursor="hand2",
+   highlightcolor="#0091EA",
+   highlightthickness=0,
+   orient='horizontal', 
+   length=685, 
+   showvalue=0, 
+   troughcolor="#448AFF",
+   sliderlength=12, 
+   borderwidth=0,
+   sliderrelief="flat")
+song_bar.place(x = 55, y = 518)
+
+#This will print the positon of the song 
+time_label_1 = Label(window, text='', fg = "white", bg='#424242', font=("arial", 9))
+time_label_1.place(x = 10, y = 510)
+time_label_2 = Label(window, fg = "white", text='', bg='#424242', font=("arial", 9))
+time_label_2.place(x = 752, y = 510)
+
+#Frame for the buttons (play, pause, next, and previous buttons)
+Control_frame = Frame(window, width=800, height=70, bg='#212121').pack(side=BOTTOM) 
+
+#photos for icons
+play = PhotoImage(file= "Icons/Play_button_2.png")
+pause = PhotoImage(file="Icons/Pause_button.png")
+forward = PhotoImage(file = "Icons/next_B.png")
+back = PhotoImage(file = "Icons/Prev_button.png")
+audio = PhotoImage(file = "Icons/audio2.png")
+mute = PhotoImage(file="Icons/mute2.png")
+icon = PhotoImage(file= "Icons/music3.png")
+
+# creating play button
+Play_button = Button(Control_frame, relief= GROOVE, image=play, bg='#212121', command= Play_music, textvariable = "1", border=0, text = "1")
+Play_button.place(x = 400, y = 544 )
+
+# creating pause button
+Pause_button = Button(Control_frame,  relief= GROOVE, image=pause, bg='#212121', command=Pause_Unpause, text = "0", textvariable = "3", border=0)
+Pause_button.place(x = 450, y = 544 )
+
+# creating next button
+Next_button = Button(Control_frame, relief= GROOVE, image=forward, bg='#212121', command=Next_song, border=0)
+Next_button.place(x = 500, y = 544)
+
+# creating previous button
+Prev_button = Button(Control_frame, relief= GROOVE, image=back, bg='#212121', command=Prev_song, border=0)
+Prev_button.place(x = 350, y = 544)
+
+Audio_icon = Label(image=audio, bg = '#212121')
+Audio_icon.place(x = 590, y = 560)
+
+# Creating slider to control volume
+slider = Scale(
+    window,
+    length=150, 
+    bg='#212121',
+    orient='horizontal', 
+    variable=vol, 
+    command=volume, 
+    cursor="hand2",  
+    highlightthickness= 0,
+    width=8,
+    troughcolor="#448AFF",
+    highlightcolor="#0091EA", 
+    sliderlength=12, 
+    borderwidth=0,
+    sliderrelief="flat"
+    )
+slider.set(50)
+slider.place(x = 630, y = 550)
+
+song_icon_label = Label(Control_frame, image=icon, bg='#212121')
+song_icon_label.place(x = 10, y = 544)
+song_name = Label(Control_frame, text = "", bg='#424242', fg='white')
+song_name.place(x = 50, y = 552.5)
+
+window.mainloop()
