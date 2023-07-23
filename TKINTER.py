@@ -23,8 +23,8 @@ window.configure()
 
 vol = IntVar()
 extention = '.mp3'
-gif1 = 'Animation/gifh1.gif'
-gif2 = 'Animation/music37.gif'
+gif1 = 'Animation/smile2.gif'
+gif2 = 'Animation/sad emoji 2.gif'
 count = 0 
 change_anim = 0 
 
@@ -57,13 +57,13 @@ def Pause_Unpause():
     if(Pause_button['textvariable']=="3"):
         Pause()
         count = 0
-        animation_frame["textbariable"] = '0'
+        animation_frame["textvariable"] = '0'
         if animation_frame["text"] == "0":
             not_listening_animation(count)
             animation_frame["text"] = "1"
         Pause_button.config(textvariable="4")
     
-    elif (Pause_button['textbariable']=="4"):
+    elif (Pause_button['textvariable']=="4"):
         animation_frame["textvariable"] = '1'
         try:
             paused
@@ -198,6 +198,7 @@ not_listening_frames = motion2.n_frames
 frame_list1 = [PhotoImage(file = gif1, format=f'gif -index {i}') for i in range(listening_frames)]
 frame_list2 = [PhotoImage(file = gif2, format=f'gif -index {i}') for i in range(not_listening_frames)]
 
+
 #this function will play the gif when music is playing 
 def listening_animation(count):
     frame_count = frame_list1[count]
@@ -206,7 +207,7 @@ def listening_animation(count):
     if count == listening_frames:
         count = 0 
     if animation_frame["textvariable"] == '1': 
-        window.after(30, lambda: listening_animation)
+        window.after(30, lambda: listening_animation (count))
 
 #this function will show the animation when musi cis not playing
 
