@@ -94,6 +94,15 @@ def Play_music():
         listening_animation(count)
         animation_frame["text"]= "0"
 
+
+# New function to play the selected song on double-click
+def play_selected_song(event):
+    selected_song = musics.get(ACTIVE)
+    mixer.music.load(selected_song)
+    mixer.music.play()
+
+
+
 #this functiong will be use to play the next song
 def Next_song(): 
     current_song = musics.curselection()
@@ -218,6 +227,10 @@ open_files.pack(padx =10, pady=3)
 #Playlist 
 musics = Listbox(window, width=800, height=15 , fg= 'white', bg='#424242', yscrollcommand=1, borderwidth=1, font=("arial", 9), selectmode=SINGLE)
 musics.pack(padx=10)
+
+
+# Bind the double-click event to the Listbox
+musics.bind("<Double-1>", play_selected_song)
 
 #this frame will render animations 
 
