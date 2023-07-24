@@ -39,7 +39,7 @@ class MusicPlayer:
         mixer.init()
 
         # file browsing
-        open_files = Button(self.window, width=100, height=1, text="Choose Music Folder", bg="#0091EA", fg='white',
+        open_files = Button(self.window, width=100, height=1, text="Choose Music Folder",
                             font=("arial", 10, 'bold'), command=self.open)
         open_files.pack(padx=10, pady=3)
 
