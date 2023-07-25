@@ -6,6 +6,8 @@ from pygame import mixer
 import time
 from PIL import Image
 import customtkinter
+import tkinter as tk
+import lyricsgenius
 
 
 class MusicPlayer:
@@ -55,6 +57,10 @@ class MusicPlayer:
         self.animation_frame = Label(self.window, width=800, text="1", height=220, bg='#323232', highlightthickness=0,
                                      textvariable="0")
         self.animation_frame.pack(padx=10, pady=5)
+
+        # Lyrics button
+        self.lyrics_button = Button(self.window, text="Lyrics", font=("arial", 10, 'bold'), command=self.display_lyrics_window,)
+        self.lyrics_button.pack(pady=5)
 
         # initialize animations
         self.not_listening_animation(self.count)
@@ -141,6 +147,7 @@ class MusicPlayer:
         self.song_icon_label.place(x=10, y=544)
         self.song_name = Label(Control_frame, text="", bg='#424242', fg='white')
         self.song_name.place(x=50, y=552.5)
+
 
         self.window.mainloop()
 
@@ -246,7 +253,48 @@ class MusicPlayer:
         if self.animation_frame["text"] == "1":
             self.listening_animation(self.count)
             self.animation_frame["text"] = "0"
+    def display_lyrics_window(self):
+        lyrics_window = Toplevel(self.window)
+        lyrics_window.title("Lyrics")
 
+        artist_label = Label(lyrics_window, text="Artist:")
+        artist_label.grid(row=0, column=0, padx=5, pady=5)
+
+        artist_entry = Entry(lyrics_window)
+        artist_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        song_label = Label(lyrics_window, text="Song:")
+        song_label.grid(row=1, column=0, padx=5, pady=5)
+
+        song_entry = Entry(lyrics_window)
+        song_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        lyrics_text = Text(lyrics_window, wrap=WORD)
+        lyrics_text.grid(row=3, columnspan=2, padx=5, pady=5)
+
+        def get_lyrics(artist, song):
+            # Replace 'YOUR_GENIUS_API_KEY' with your actual Genius API key
+            genius = lyricsgenius.Genius("lJIC8GwL9tSEBTlypIOxHP59tvqZTiZlP9VMm68An0liV1tzRRXtXpDCYetf9H5K")
+
+            try:
+                song_info = genius.search_song(song, artist)
+                if song_info is not None:
+                    return song_info.lyrics
+                else:
+                    return "Lyrics not found."
+            except Exception as e:
+                print(f"Error occurred: {e}")
+                return "Error occurred while fetching lyrics."
+
+        def display_lyrics():
+            artist = artist_entry.get()
+            song = song_entry.get()
+            lyrics = get_lyrics(artist, song)
+            lyrics_text.delete(1.0, END)
+            lyrics_text.insert(END, lyrics)
+
+        get_lyrics_button = Button(lyrics_window, text="Get Lyrics", command=display_lyrics)
+        get_lyrics_button.grid(row=2, columnspan=2, padx=5, pady=5)
     def Pause(self):
         global paused
         global change_anim
