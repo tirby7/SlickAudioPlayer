@@ -253,6 +253,9 @@ class MusicPlayer:
         if self.animation_frame["text"] == "1":
             self.listening_animation(self.count)
             self.animation_frame["text"] = "0"
+    
+    
+    #This is the code for the second tkinter window 
     def display_lyrics_window(self):
         lyrics_window = Toplevel(self.window)
         lyrics_window.title("Lyrics")
@@ -272,6 +275,7 @@ class MusicPlayer:
         lyrics_text = Text(lyrics_window, wrap=WORD)
         lyrics_text.grid(row=3, columnspan=2, padx=5, pady=5)
 
+        #This is the code to get lyrics 
         def get_lyrics(artist, song):
             # Replace 'YOUR_GENIUS_API_KEY' with your actual Genius API key
             genius = lyricsgenius.Genius("lJIC8GwL9tSEBTlypIOxHP59tvqZTiZlP9VMm68An0liV1tzRRXtXpDCYetf9H5K")
@@ -286,6 +290,8 @@ class MusicPlayer:
                 print(f"Error occurred: {e}")
                 return "Error occurred while fetching lyrics."
 
+        
+        #This is the code to display the lyrics
         def display_lyrics():
             artist = artist_entry.get()
             song = song_entry.get()
@@ -295,6 +301,8 @@ class MusicPlayer:
 
         get_lyrics_button = Button(lyrics_window, text="Get Lyrics", command=display_lyrics)
         get_lyrics_button.grid(row=2, columnspan=2, padx=5, pady=5)
+   
+   
     def Pause(self):
         global paused
         global change_anim
