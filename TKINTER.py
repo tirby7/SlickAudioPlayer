@@ -38,6 +38,8 @@ class MusicPlayer:
         self.frame_list1 = [PhotoImage(file=self.gif1, format=f'gif -index {i}') for i in range(self.listening_frames)]
         self.frame_list2 = [PhotoImage(file=self.gif2, format=f'gif -index {i}') for i in range(self.not_listening_frames)]
         
+        self.current_index = -1
+
         mixer.init()
 
         # file browsing
@@ -150,7 +152,7 @@ class MusicPlayer:
 
 
         self.window.mainloop()
-
+    #lets the user go into their files and click a music folder 
     def open(self):
         global path
         global song
@@ -166,7 +168,7 @@ class MusicPlayer:
         selected_song = self.musics.get(ACTIVE)
         mixer.music.load(selected_song)
         mixer.music.play()
-
+    #plays the music but also serves as a restart button when you press the play button  
     def Play_music(self):
         music_name = self.musics.get(ACTIVE)
         if len(music_name) > 40:
@@ -181,7 +183,7 @@ class MusicPlayer:
         if self.animation_frame["text"] == "1":
             self.listening_animation(self.count)
             self.animation_frame["text"] = "0"
-
+    #this is the function for the pause button where click the pause button will resume play from where it left off 
     def Pause_Unpause(self):
         music_name = self.musics.get(ACTIVE)
         if len(music_name) > 40:
@@ -211,28 +213,35 @@ class MusicPlayer:
                     self.listening_animation(self.count)
                     self.animation_frame["text"] = "0"
             self.Pause_button.config(textvariable="3")
-
+    #function for playing the next song 
     def Next_song(self):
-        current_song = self.musics.curselection()
-        select = current_song[0] + 1
-        next_song = self.musics.get(select)
-        if len(next_song) > 40:
-            self.song_name.config(text=next_song[0:40] + ".........")
+        self.current_index += 1
+        total_songs = self.musics.size()
+
+        if 0 <= self.current_index < total_songs:
+            next_song = self.musics.get(self.current_index)
+            if len(next_song) > 40:
+                self.song_name.config(text=next_song[0:40] + ".........")
+            else:
+                self.song_name.config(text=next_song)
+
+            mixer.music.load(next_song)
+            mixer.music.play()
+
+            self.musics.selection_clear(0, END)
+            self.musics.activate(self.current_index)
+            self.musics.selection_set(self.current_index, last=None)
+
+            self.count = 0
+            self.animation_frame["textvariable"] = '1'
+            if self.animation_frame["text"] == "1":
+                self.listening_animation(self.count)
+                self.animation_frame["text"] = "0"
         else:
-            self.song_name.config(text=next_song)
-
-        mixer.music.load(next_song)
-        mixer.music.play(loops=0)
-
-        self.musics.selection_clear(current_song, END)
-        self.musics.activate(select)
-        self.musics.selection_set(select, last=NONE)
-        self.count = 0
-        self.animation_frame["textvariable"] = '1'
-        if self.animation_frame["text"] == "1":
-            self.listening_animation(self.count)
-            self.animation_frame["text"] = "0"
-
+            # Stop the music when there are no more songs to play
+            mixer.music.stop()
+            self.song_name.config(text="")
+    #function for playing the previous song
     def Prev_song(self):
         current_song = self.musics.curselection()
         select = current_song[0] - 1
@@ -277,7 +286,7 @@ class MusicPlayer:
 
         #This is the code to get lyrics 
         def get_lyrics(artist, song):
-            # Replace 'YOUR_GENIUS_API_KEY' with your actual Genius API key
+            # This is the genius API where it pulls the lyrics from genius
             genius = lyricsgenius.Genius("lJIC8GwL9tSEBTlypIOxHP59tvqZTiZlP9VMm68An0liV1tzRRXtXpDCYetf9H5K")
 
             try:
@@ -302,14 +311,14 @@ class MusicPlayer:
         get_lyrics_button = Button(lyrics_window, text="Get Lyrics", command=display_lyrics)
         get_lyrics_button.grid(row=2, columnspan=2, padx=5, pady=5)
    
-   
+   #function for pausing the music and changing the animation
     def Pause(self):
         global paused
         global change_anim
         self.change_anim = 0
         paused = True
         mixer.music.pause()
-
+    #function for controlling the volume of the music 
     def volume(self, vol):
         Volume = int(vol) / 100
         if Volume >= 0.80:
@@ -322,7 +331,7 @@ class MusicPlayer:
         else:
             self.Audio_icon.config(image=self.audio)
         mixer.music.set_volume(Volume)
-
+    #shows the playing time of the music 
     def playing_time(self):
         current_position = mixer.music.get_pos() / 1000
 
@@ -343,7 +352,7 @@ class MusicPlayer:
         self.song_bar.set(current_position)
 
         self.time_label_1.after(1000, self.playing_time)
-
+    #function for the listening animation when you press the play button 
     def listening_animation(self, count):
         frame_count = self.frame_list1[count]
         self.animation_frame.configure(image=frame_count)
@@ -352,7 +361,7 @@ class MusicPlayer:
             count = 0
         if self.animation_frame["textvariable"] == '1':
             self.window.after(30, lambda: self.listening_animation(count))
-
+    #function for the animation when you press the pause button 
     def not_listening_animation(self, count):
         frame_count = self.frame_list2[count]
         self.animation_frame.configure(image=frame_count)
