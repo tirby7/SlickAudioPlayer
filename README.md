@@ -21,17 +21,23 @@ When a file is playing it will be displayed on the bottom left hand screen showi
 
 
 <img width="562" alt="Screenshot 2023-07-28 at 7 11 03 PM" src="https://github.com/tirby7/SlickAudioPlayer/assets/135442774/f3e313cc-143a-4086-9b82-0dd7e2e1afa0">
+
+
 Under the GIF there is a lyrics button. Once the button is clicked, it will open a window where you can search for lyrics by artist and song. 
 
 
 
 <img width="690" alt="Screenshot 2023-07-28 at 8 02 24 PM" src="https://github.com/tirby7/SlickAudioPlayer/assets/135442774/3d975b3e-6f2a-49fa-81b0-48488dd78b02">
+
+
 When you do not put in an input or look for a song that does not exist, no lyrics found will be displayed in the box below.
 
 
 
 
 <img width="690" alt="Screenshot 2023-07-28 at 8 01 07 PM" src="https://github.com/tirby7/SlickAudioPlayer/assets/135442774/4af7521e-a1e1-4a34-b92b-7cb218bf23fe">
+
+
 When you find a song the Lyrics will display in the window. 
 
 
