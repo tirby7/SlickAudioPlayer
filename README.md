@@ -1,7 +1,46 @@
 # SlickAudioPlayer
+
+
+Python version being ran:
+3.10.9 
+
+Modules that needed to be installed in terminal: 
+pip install pygame 
+pip install mutagen
+pip install lyricsgenius
+pip install pillow
+pip install customtkinter
+pip install tk 
+
+Things that neeeded to be imported:
+from tkinter import *
+from tkinter import filedialog
+import os
+from mutagen.mp3 import MP3
+from pygame import mixer
+import time
+from PIL import Image
+import customtkinter
+import tkinter as tk
+import lyricsgenius
+
+
+
+
+
+
+
+
+
+
+
+
+
 <img width="790" alt="Screenshot 2023-07-28 at 7 10 48 PM" src="https://github.com/tirby7/SlickAudioPlayer/assets/135442774/b498687b-6808-4d0c-b96f-09ce05f1f11f">
 
-This is slick audio player. A music audio player that has a gif playing when you play music and has the gif looking down at the buttons when you pause the music. 
+This is slick audio player, a TkInter application. A music audio player that has a gif playing when you play music and has the gif looking down at the buttons when you pause the music.
+
+Slick Audio Player only supports MP3 files at this time. All other audio files will not run on this player. 
 
 
 <img width="912" alt="Screenshot 2023-07-28 at 7 20 46 PM" src="https://github.com/tirby7/SlickAudioPlayer/assets/135442774/b8fe90b5-3156-4e83-a959-c7c3bb14f368">
@@ -43,3 +82,5 @@ When you find a song the Lyrics will display in the window.
 
 
 To close the applicaiton just click the red button(mac) or x button in the top right corner to close the lyrics window and application. 
+
+
