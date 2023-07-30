@@ -152,6 +152,9 @@ class MusicPlayer:
 
 
         self.window.mainloop()
+    
+    
+    
     #lets the user go into their files and click a music folder 
     def open(self):
         global path
@@ -168,6 +171,9 @@ class MusicPlayer:
         selected_song = self.musics.get(ACTIVE)
         mixer.music.load(selected_song)
         mixer.music.play()
+    
+    
+    
     #plays the music but also serves as a restart button when you press the play button  
     def Play_music(self):
         music_name = self.musics.get(ACTIVE)
@@ -183,6 +189,9 @@ class MusicPlayer:
         if self.animation_frame["text"] == "1":
             self.listening_animation(self.count)
             self.animation_frame["text"] = "0"
+    
+    
+    
     #this is the function for the pause button where click the pause button will resume play from where it left off 
     def Pause_Unpause(self):
         music_name = self.musics.get(ACTIVE)
@@ -213,6 +222,8 @@ class MusicPlayer:
                     self.listening_animation(self.count)
                     self.animation_frame["text"] = "0"
             self.Pause_button.config(textvariable="3")
+    
+    
     #function for playing the next song 
     def Next_song(self):
         self.current_index += 1
@@ -241,6 +252,9 @@ class MusicPlayer:
             # Stop the music when there are no more songs to play
             mixer.music.stop()
             self.song_name.config(text="")
+    
+    
+    
     #function for playing the previous song
     def Prev_song(self):
         current_song = self.musics.curselection()
@@ -318,6 +332,8 @@ class MusicPlayer:
         self.change_anim = 0
         paused = True
         mixer.music.pause()
+    
+    
     #function for controlling the volume of the music 
     def volume(self, vol):
         Volume = int(vol) / 100
@@ -331,6 +347,8 @@ class MusicPlayer:
         else:
             self.Audio_icon.config(image=self.audio)
         mixer.music.set_volume(Volume)
+    
+    
     #shows the playing time of the music 
     def playing_time(self):
         current_position = mixer.music.get_pos() / 1000
@@ -352,6 +370,9 @@ class MusicPlayer:
         self.song_bar.set(current_position)
 
         self.time_label_1.after(1000, self.playing_time)
+    
+    
+    
     #function for the listening animation when you press the play button 
     def listening_animation(self, count):
         frame_count = self.frame_list1[count]
@@ -361,6 +382,9 @@ class MusicPlayer:
             count = 0
         if self.animation_frame["textvariable"] == '1':
             self.window.after(30, lambda: self.listening_animation(count))
+    
+    
+    
     #function for the animation when you press the pause button 
     def not_listening_animation(self, count):
         frame_count = self.frame_list2[count]
