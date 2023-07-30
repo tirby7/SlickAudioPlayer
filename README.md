@@ -6,41 +6,17 @@ Python version being ran:
 
 Modules that needed to be installed in terminal: 
 
-pip install pygame 
+'pip install pygame' 
 
-pip install mutagen
+'pip install mutagen'
 
-pip install lyricsgenius
+'pip install lyricsgenius'
 
-pip install pillow
+'pip install pillow'
 
-pip install customtkinter
+'pip install customtkinter'
 
-pip install tk 
-
-Things that neeeded to be imported:
-
-from tkinter import *
-
-from tkinter import filedialog
-
-import os
-
-from mutagen.mp3 import MP3
-
-from pygame import mixer
-
-import time
-
-from PIL import Image
-
-import customtkinter
-
-import tkinter as tk
-
-import lyricsgenius
-
-
+'pip install tk' 
 
 
 
