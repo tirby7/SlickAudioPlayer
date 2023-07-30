@@ -19,7 +19,16 @@ Modules that needed to be installed in terminal:
 'pip install tk' 
 
 
+Supported audio files: 
+'MP3'
 
+
+Unsupported audio files:
+'M4A'
+'FLAC'
+'WAV'
+'MP4'
+'AAC' 
 
 
 
