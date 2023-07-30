@@ -1,3 +1,13 @@
+#Install the following modules in the terminal
+'pip install tk' 
+'pip install mutagen' 
+'pip install pygame'
+'pip install pillow'
+'pip install lyricsgenius'
+
+
+
+
 from tkinter import *
 from tkinter import filedialog
 import os
