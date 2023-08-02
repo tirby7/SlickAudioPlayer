@@ -6,17 +6,17 @@ Python version being ran:
 
 Modules that needed to be installed in terminal: 
 
-'pip install pygame' 
+`pip install pygame` 
 
-'pip install mutagen'
+`pip install mutagen`
 
-'pip install lyricsgenius'
+`pip install lyricsgenius`
 
-'pip install pillow'
+`pip install pillow`
 
-'pip install customtkinter'
+`pip install customtkinter`
 
-'pip install tk' 
+`pip install tk` 
 
 
 Supported audio files: 
