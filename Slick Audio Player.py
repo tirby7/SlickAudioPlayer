@@ -55,7 +55,9 @@ class MusicPlayer:
         self.frame_list2 = [PhotoImage(file=self.gif2, format=f'gif -index {i}') for i in range(self.not_listening_frames)]
         
         self.current_index = -1
-
+        
+        self.window.protocol("WM_DELETE_WINDOW", self.quit_app)  # Bind the window close event to quit_app
+        
         mixer.init()
 
         # file browsing
@@ -193,7 +195,12 @@ class MusicPlayer:
         selected_song = self.musics.get(ACTIVE)
         mixer.music.load(selected_song)
         mixer.music.play()
-    
+
+    def quit_app(self):
+        '''
+        Function to quit the whole application when the "Quit Application" button is pressed.
+        '''
+        self.window.destroy()
     
     
 
