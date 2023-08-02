@@ -376,7 +376,17 @@ class MusicPlayer:
 
         get_lyrics_button = Button(lyrics_window, text="Get Lyrics", command=display_lyrics)
         get_lyrics_button.grid(row=2, columnspan=2, padx=5, pady=5)
-   
+        
+        
+        def close_lyrics_window():
+            '''
+            Code for qutting the lyrics screen
+            '''
+            lyrics_window.destroy()
+
+        quit_button = Button(lyrics_window, text="Quit", command=close_lyrics_window)
+        quit_button.grid(row=4, columnspan=2, padx=5, pady=5)
+
    
     def Pause(self):
         '''
