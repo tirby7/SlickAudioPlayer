@@ -4,7 +4,7 @@
 'pip install pygame'
 'pip install pillow'
 'pip install lyricsgenius'
-
+'pip install customtkinter'
 
 
 
