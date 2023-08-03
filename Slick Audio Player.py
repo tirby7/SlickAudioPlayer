@@ -90,7 +90,6 @@ class MusicPlayer:
                               from_=0,
                               to=100,
                               width=5,
-                              cursor="hand2",
                               highlightcolor="#0091EA",
                               highlightthickness=0,
                               orient='horizontal',
