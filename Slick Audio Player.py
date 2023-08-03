@@ -101,6 +101,13 @@ class MusicPlayer:
                               sliderrelief="flat")
         self.song_bar.place(x=55, y=518)
 
+
+
+
+        # Disable mouse events on the slider
+        self.song_bar.bind("<ButtonPress-1>", lambda event: "break")
+        self.song_bar.bind("<B1-Motion>", lambda event: "break")
+
         # Label to show the position of the song
         self.time_label_1 = Label(self.window, text='', fg="white", bg='#424242', font=("arial", 9))
         self.time_label_1.place(x=10, y=510)
