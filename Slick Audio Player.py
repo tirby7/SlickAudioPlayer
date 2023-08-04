@@ -204,6 +204,11 @@ class MusicPlayer:
         selected_song = self.musics.get(ACTIVE)
         mixer.music.load(selected_song)
         mixer.music.play()
+        if len(selected_song) > 40:
+            self.song_name.config(text=selected_song[:40] + ".........")
+        else:
+            self.song_name.config(text=selected_song)
+
         self.start_animation()
 
     def quit_app(self):
@@ -280,50 +285,52 @@ class MusicPlayer:
     
     
     
+
     def Next_song(self):
         '''
-        
-        This function serves as the funciton for playing the next song when next button is pressed. 
-        
+        This function serves as the function for playing the next song when the next button is pressed.
         '''
-        self.current_index += 1
         total_songs = self.musics.size()
+        self.current_index += 1
 
-        if 0 <= self.current_index < total_songs:
-            next_song = self.musics.get(self.current_index)
-            if len(next_song) > 40:
-                self.song_name.config(text=next_song[0:40] + ".........")
-            else:
-                self.song_name.config(text=next_song)
+        if self.current_index >= total_songs:
+            # If it's the last song, go to the first song in the playlist
+            self.current_index = 0
 
-            mixer.music.load(next_song)
-            mixer.music.play()
-
-            self.musics.selection_clear(0, END)
-            self.musics.activate(self.current_index)
-            self.musics.selection_set(self.current_index, last=None)
-
-            self.count = 0
-            self.animation_frame["textvariable"] = '1'
-            if self.animation_frame["text"] == "1":
-                self.listening_animation(self.count)
-                self.animation_frame["text"] = "0"
+        next_song = self.musics.get(self.current_index)
+        if len(next_song) > 40:
+            self.song_name.config(text=next_song[0:40] + ".........")
         else:
-            # Stop the music when there are no more songs to play
-            mixer.music.stop()
-            self.song_name.config(text="")
+            self.song_name.config(text=next_song)
+
+        mixer.music.load(next_song)
+        mixer.music.play()
+
+        self.musics.selection_clear(0, END)
+        self.musics.activate(self.current_index)
+        self.musics.selection_set(self.current_index, last=None)
+
+        self.count = 0
+        self.animation_frame["textvariable"] = '1'
+        if self.animation_frame["text"] == "1":
+            self.listening_animation(self.count)
+            self.animation_frame["text"] = "0"
     
     
     
   
     def Prev_song(self):
         '''
-        
         This function is for playing the previous song when the back button is pressed.
-        
         '''
         current_song = self.musics.curselection()
         select = current_song[0] - 1
+        total_songs = self.musics.size()
+
+        if select < 0:
+            # If it's the first song, go to the last song in the playlist
+            select = total_songs - 1
+
         next_song = self.musics.get(select)
         if len(next_song) > 40:
             self.song_name.config(text=next_song[0:40] + ".........")
