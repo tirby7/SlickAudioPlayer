@@ -215,6 +215,9 @@ class MusicPlayer:
 
         self.start_animation()
 
+        # Call the playing_time method to update the position of the song
+        self.playing_time()
+
     def quit_app(self):
         '''
         Function to quit the whole application when the "Quit Application" button is pressed.
@@ -289,13 +292,12 @@ class MusicPlayer:
     
     
     
-
     def Next_song(self):
         '''
         This function serves as the function for playing the next song when the next button is pressed.
         '''
-        total_songs = self.musics.size()
         self.current_index += 1
+        total_songs = self.musics.size()
 
         if self.current_index >= total_songs:
             # If it's the last song, go to the first song in the playlist
