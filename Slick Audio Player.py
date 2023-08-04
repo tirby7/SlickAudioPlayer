@@ -54,9 +54,11 @@ class MusicPlayer:
         self.frame_list1 = [PhotoImage(file=self.gif1, format=f'gif -index {i}') for i in range(self.listening_frames)]
         self.frame_list2 = [PhotoImage(file=self.gif2, format=f'gif -index {i}') for i in range(self.not_listening_frames)]
         
+
         self.current_index = -1
         
         self.window.protocol("WM_DELETE_WINDOW", self.quit_app)  # Bind the window close event to quit_app
+        
         
         mixer.init()
 
@@ -98,10 +100,8 @@ class MusicPlayer:
                               troughcolor="#448AFF",
                               sliderlength=12,
                               borderwidth=0,
-                              sliderrelief="flat")
+                              sliderrelief="flat",)
         self.song_bar.place(x=55, y=518)
-
-
 
 
         # Disable mouse events on the slider
@@ -126,6 +126,9 @@ class MusicPlayer:
         self.mute = PhotoImage(file="Icons/mute2.png")
         self.icon = PhotoImage(file="Icons/music3.png")
 
+        self.lyrics_window_open = False 
+        self.lyrics_window = None
+        
         # Creating play button
         self.Play_button = Button(Control_frame, relief=GROOVE, image=self.play, bg='#212121', command=self.Play_music,
                                   textvariable="1", border=0)
@@ -334,23 +337,25 @@ class MusicPlayer:
         '''
         This is the code for displaying the second TkInter window.
         '''
-        
-        lyrics_window = Toplevel(self.window)
-        lyrics_window.title("Lyrics")
+        if not self.lyrics_window_open:
+            self.lyrics_window_open = True
+            self.lyrics_window = Toplevel(self.window)
+            self.lyrics_window.title("Lyrics")
+            #self.lyrics_window.protocol("WM_DELETE_WINDOW", self.close_lyrics_window)
 
-        artist_label = Label(lyrics_window, text="Artist:")
+        artist_label = Label(self.lyrics_window, text="Artist:")
         artist_label.grid(row=0, column=0, padx=5, pady=5)
 
-        artist_entry = Entry(lyrics_window)
+        artist_entry = Entry(self.lyrics_window)
         artist_entry.grid(row=0, column=1, padx=5, pady=5)
 
-        song_label = Label(lyrics_window, text="Song:")
+        song_label = Label(self.lyrics_window, text="Song:")
         song_label.grid(row=1, column=0, padx=5, pady=5)
 
-        song_entry = Entry(lyrics_window)
+        song_entry = Entry(self.lyrics_window)
         song_entry.grid(row=1, column=1, padx=5, pady=5)
 
-        lyrics_text = Text(lyrics_window, wrap=WORD)
+        lyrics_text = Text(self.lyrics_window, wrap=WORD)
         lyrics_text.grid(row=3, columnspan=2, padx=5, pady=5)
 
        
@@ -387,7 +392,15 @@ class MusicPlayer:
             lyrics_text.delete(1.0, END)
             lyrics_text.insert(END, lyrics)
 
-        get_lyrics_button = Button(lyrics_window, text="Get Lyrics", command=display_lyrics)
+            # Reset back to False when the lyrics window is closed 
+            def on_lyrics_window_close():
+                self.lyrics_window_open = False
+                self.lyrics_window.destroy()
+                self.lyrics_window = None  # Reset the reference to the lyrics window
+
+            self.lyrics_window.protocol("WM_DELETE_WINDOW", on_lyrics_window_close)
+
+        get_lyrics_button = Button(self.lyrics_window, text="Get Lyrics", command=display_lyrics)
         get_lyrics_button.grid(row=2, columnspan=2, padx=5, pady=5)
         
         
@@ -395,9 +408,12 @@ class MusicPlayer:
             '''
             Code for qutting the lyrics screen
             '''
-            lyrics_window.destroy()
 
-        quit_button = Button(lyrics_window, text="Quit", command=close_lyrics_window)
+            self.lyrics_window_open = False
+            self.lyrics_window.destroy()
+            self.lyrics_window = None
+
+        quit_button = Button(self.lyrics_window, text="Quit", command=close_lyrics_window)
         quit_button.grid(row=4, columnspan=2, padx=5, pady=5)
 
    
@@ -449,6 +465,8 @@ class MusicPlayer:
 
         converted__song_length = time.strftime('%M:%S', time.gmtime(song_length))
         self.time_label_2.config(text=converted__song_length)
+
+        self.song_bar.set(current_position)
 
         if int(current_position) == song_len:
             self.Next_song()
