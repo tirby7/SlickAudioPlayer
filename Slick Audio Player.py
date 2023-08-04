@@ -199,15 +199,19 @@ class MusicPlayer:
 
     def play_selected_song(self, event):
         '''
-        Plays the selected song from the listbox
+        Plays the selected song from the listbox and starts the animation.
         '''
         selected_song = self.musics.get(ACTIVE)
         mixer.music.load(selected_song)
         mixer.music.play()
+
         if len(selected_song) > 40:
             self.song_name.config(text=selected_song[:40] + ".........")
         else:
             self.song_name.config(text=selected_song)
+
+        # Find the index of the selected song in the playlist
+        self.current_index = self.musics.index(ACTIVE)
 
         self.start_animation()
 
