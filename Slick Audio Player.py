@@ -185,7 +185,7 @@ class MusicPlayer:
    
     def open(self):
         '''
-        Opens a file dialog to choose a music foldeer and displays the list of available MP3 files in the Listbox
+        Opens a file dialog to choose a music folder and displays the list of available MP3 files in the Listbox
         '''
         global path
         global song
@@ -193,9 +193,9 @@ class MusicPlayer:
         if path:
             os.chdir(path)
             songs = os.listdir(path)
-            for song in songs:
-                if song.endswith(self.extention):
-                    self.musics.insert(END, song)
+            sorted_songs = sorted([song for song in songs if song.endswith(self.extention)])
+            for song in sorted_songs:
+                self.musics.insert(END, song)
 
     def play_selected_song(self, event):
         '''
