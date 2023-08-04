@@ -204,6 +204,7 @@ class MusicPlayer:
         selected_song = self.musics.get(ACTIVE)
         mixer.music.load(selected_song)
         mixer.music.play()
+        self.start_animation()
 
     def quit_app(self):
         '''
@@ -212,7 +213,16 @@ class MusicPlayer:
         self.window.destroy()
     
     
-
+    def start_animation(self):
+        '''
+        Starts the animation.
+        '''
+        self.count = 0
+        self.animation_frame["textvariable"] = '1'
+        if self.animation_frame["text"] == "1":
+            self.listening_animation(self.count)
+            self.animation_frame["text"] = "0"
+    
     def Play_music(self):
         '''
         Plays the music but also serves as a restart button when you press the play button.
@@ -230,6 +240,7 @@ class MusicPlayer:
         if self.animation_frame["text"] == "1":
             self.listening_animation(self.count)
             self.animation_frame["text"] = "0"
+            self.start_animation() 
     
     
     
